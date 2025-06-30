@@ -1,0 +1,9 @@
+streamlit
+opencv-python 
+pillow 
+scikit-image 
+numpy 
+scipy 
+tensorflow 
+exifread 
+matplotlib
