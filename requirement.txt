@@ -1,9 +1,9 @@
 streamlit
-opencv-python==4.5.5.64
-pillow 
-scikit-image 
-numpy 
-scipy 
-tensorflow 
-exifread 
+opencv-python-headless==4.5.5.64
+pillow
+scikit-image
+numpy
+scipy
+tensorflow
+exifread
 matplotlib
