@@ -1,11 +1,10 @@
 streamlit
 opencv-python-headless==4.5.5.64
-pillow
+numpy==1.23.5
+scipy
 scikit-image
 pillow
-numpy
-tensorflow
 matplotlib
 pytesseract
 exifread
-pytesseract
+tensorflow==2.12.0
