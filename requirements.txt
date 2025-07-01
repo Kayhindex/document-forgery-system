@@ -7,4 +7,5 @@ pillow
 matplotlib
 pytesseract
 exifread
-tensorflow==2.12.0
+tensorflow==2.15.0
+
