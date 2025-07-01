@@ -1,0 +1,11 @@
+streamlit
+opencv-python-headless==4.5.5.64
+pillow
+scikit-image
+pillow
+numpy
+tensorflow
+matplotlib
+pytesseract
+exifread
+pytesseract
