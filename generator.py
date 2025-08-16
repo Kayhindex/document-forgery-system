@@ -6,19 +6,19 @@ from tensorflow.keras.models import load_model
 from PIL import Image, ImageDraw, ImageFont
 
 # Optional: Uncomment and modify if using Windows and Tesseract isn't in PATH
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = r"C:\Users\debor\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
 
 # Load model only once
 @st.cache_resource
 def load_forgery_model():
-    model = load_model("document_forgery_model.keras")
+    model = load_model("document_forgery_model.h5")
     return model
 
 model = load_forgery_model()
 
 @st.cache_resource
 def load_2nd_model():
-    model2 = load_model("document1_forgery_model.keras")
+    model2 = load_model("school_forgery_model.h5")
     return model2
 
 model2 = load_2nd_model()
@@ -51,4 +51,3 @@ def mark_fake_document(image_path, is_fake):
         draw.text((width//4, height//2), "FAKE DOCUMENT", fill="red", font=font,)
         draw.line((0, height//2, width, height//2), fill="red", width=5)
     return img
-
