@@ -45,6 +45,7 @@ model2 = load_school_model()
 # -------------------------------
 # Preprocessing Function
 # -------------------------------
+
 def preprocess_image(image):
     img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     resized = cv2.resize(img, (224, 224))
@@ -55,6 +56,7 @@ def preprocess_image(image):
 # -------------------------------
 # OCR Function
 # -------------------------------
+@st.cache_resource
 def load_easyocr_reader():
     """
     Downloads EasyOCR models from Google Drive (if not already present)
