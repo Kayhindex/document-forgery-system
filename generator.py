@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import cv2
-import pytesseract
+import easyocr
 import gdown
 from tensorflow.keras.models import load_model
 from PIL import Image, ImageDraw, ImageFont
@@ -58,7 +58,9 @@ def preprocess_image(image):
 def extract_text(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    text = pytesseract.image_to_string(thresh)
+    reader = easyocr.Reader(['en'])  # load once
+    result = reader.readtext(image)
+    text = " ".join([res[1] for res in result])
     return text
 
 # -------------------------------
