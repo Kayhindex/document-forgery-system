@@ -8,4 +8,4 @@ matplotlib
 pytesseract
 exifread
 tensorflow==2.13.0
-
+gdown
