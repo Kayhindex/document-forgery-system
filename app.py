@@ -329,7 +329,7 @@ elif selected == 'Detect Forgery':
                 font-weight: 800;
                 margin-top: 20px;
                 color: #002b45;
-                background-color: red;
+                background-color: white;
             }
             # .upload-box {
             #     background-color: #f0f4f8;
@@ -387,7 +387,7 @@ elif selected == 'Detect Forgery':
         if doc_type == 'National ID':
             prediction = model.predict(input_img)[0][0]
         else:
-            prediction = model2.predict(input_img)[0][0]  # Dummy confidence score for School ID
+            prediction = model2.predict(input_img)[0][0]  
         is_fake = prediction < 0.5
         label = "🔴 Fake" if is_fake else "🟢 Original"
         confidence = (1 - prediction) if is_fake else prediction
@@ -549,7 +549,3 @@ elif selected == 'About':
         </div>
     </div>
     """, unsafe_allow_html=True)
-
-
-
-
