@@ -9,3 +9,4 @@ pytesseract
 exifread
 tensorflow
 gdown
+streamlit-option-menu
