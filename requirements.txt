@@ -10,3 +10,4 @@ exifread
 tensorflow
 gdown
 streamlit-option-menu
+easyocr
