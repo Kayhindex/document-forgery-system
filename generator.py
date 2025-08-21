@@ -11,8 +11,8 @@ import os
 # Google Drive File IDs
 # (replace with your own file IDs)
 # -------------------------------
-DOCUMENT_MODEL_ID = "YOUR_DOCUMENT_MODEL_FILE_ID"
-SCHOOL_MODEL_ID = "YOUR_SCHOOL_MODEL_FILE_ID"
+DOCUMENT_MODEL_ID = "1VTzUIddlLttbLAZhldzI8GMQsrvrhG7-"
+SCHOOL_MODEL_ID = "12UHOLzK2tb8BaMXoTVzV00kOpixjOz5C"
 
 # -------------------------------
 # Helper function: download from Drive
