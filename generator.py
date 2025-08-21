@@ -55,14 +55,65 @@ def preprocess_image(image):
 # -------------------------------
 # OCR Function
 # -------------------------------
-def extract_text(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    reader = easyocr.Reader(['en'])  # load once
-    result = reader.readtext(image)
-    text = " ".join([res[1] for res in result])
-    return text
+def load_easyocr_reader():
+    """
+    Downloads EasyOCR models from Google Drive (if not already present)
+    and returns an EasyOCR reader instance.
+    """
 
+    # Create directories
+    os.makedirs("models/easyocr/detection", exist_ok=True)
+    os.makedirs("models/easyocr/recognition", exist_ok=True)
+
+    # 🔹 Replace with your own Google Drive file IDs
+    DETECTION_MODEL_ID = "1BrPH3TOdDhUTUkOkYeGeWBBAEHMBWo6c"
+    RECOGNITION_MODEL_ID = "14KoCV69J2V___XSug8KxMkBHRA10avSa"
+
+    # Local paths
+    detection_path = "models/easyocr/detection/craft_mlt_25k.pth"
+    recognition_path = "models/easyocr/recognition/english_g2.pth"
+
+    # Download detection model if not exists
+    if not os.path.exists(detection_path):
+        gdown.download(f"https://drive.google.com/uc?id={DETECTION_MODEL_ID}",
+                       detection_path, quiet=False)
+
+    # Download recognition model if not exists
+    if not os.path.exists(recognition_path):
+        gdown.download(f"https://drive.google.com/uc?id={RECOGNITION_MODEL_ID}",
+                       recognition_path, quiet=False)
+
+    # Initialize EasyOCR reader using local models
+    reader = easyocr.Reader(
+        ['en'],
+        model_storage_directory="models/easyocr",
+        user_network_directory="models/easyocr"
+    )
+
+    return reader
+
+
+def extract_text(image):
+    """
+    Extracts text from an image using EasyOCR models (downloaded from Google Drive).
+    """
+
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Apply thresholding for better OCR
+    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Load EasyOCR reader (from Google Drive models)
+    reader = load_easyocr_reader()
+
+    # Perform OCR
+    result = reader.readtext(thresh)
+
+    # Extract text only
+    text = " ".join([res[1] for res in result])
+
+    return text
 # -------------------------------
 # Mark Fake Documents
 # -------------------------------
