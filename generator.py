@@ -54,8 +54,7 @@ def preprocess_image(image):
     return reshaped, img
 
 # -------------------------------
-ocr = easyocr.Reader(['en'])
-
+@st.cache_resource
 def preprocess_for_ocr(image_path):
     """Preprocess image for OCR (resize + grayscale)."""
     image = cv2.imread(image_path)
