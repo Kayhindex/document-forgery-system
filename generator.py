@@ -79,10 +79,17 @@ def mark_fake_document(image_path, is_fake):
 
     if is_fake:
         try:
-            font = ImageFont.truetype("arial.ttf", size=40)
+            # Try loading Arial if available
+            font = ImageFont.truetype("DejaVuSans.ttf", size=40)
         except:
             font = ImageFont.load_default()
-        draw.text((width // 4, height // 2), "FAKE DOCUMENT", fill="red", font=font)
+
+        draw.text(
+            (width // 4, height // 2),
+            "FAKE DOCUMENT",
+            fill="red",
+            font=font
+        )
         draw.line((0, height // 2, width, height // 2), fill="red", width=5)
 
     return img
