@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import cv2
-from paddleocr import PaddleOCR
+import easyocr
 import gdown
 from tensorflow.keras.models import load_model
 from PIL import Image, ImageDraw, ImageFont
@@ -63,19 +63,11 @@ def preprocess_for_ocr(image_path):
     resized = cv2.resize(gray, (800, 800))  # keep it standard size
     return resized
 
-def extract_text(image_input):
-    """Extract text using PaddleOCR. Supports both file paths and cv2/numpy images."""
-    if isinstance(image_input, str):
-        # image_input is a file path
-        result = ocr.ocr(image_input, cls=True)
-    else:
-        # assume it's an image array (cv2 / numpy)
-        result = ocr.ocr(image_input, cls=True)
+ocr = easyocr.Reader(['en'])
 
-    text = ""
-    for line in result:
-        for word_info in line:
-            text += word_info[1][0] + " "
+def extract_text(image_input):
+    result = ocr.readtext(image_input)
+    text = " ".join([res[1] for res in result])
     return text.strip()
 
 # -------------------------------
