@@ -54,7 +54,7 @@ def preprocess_image(image):
     return reshaped, img
 
 # -------------------------------
-ocr = PaddleOCR(use_angle_cls=True, lang="en")
+ocr = easyocr.Reader(['en'])
 
 def preprocess_for_ocr(image_path):
     """Preprocess image for OCR (resize + grayscale)."""
