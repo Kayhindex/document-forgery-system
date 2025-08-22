@@ -63,9 +63,10 @@ def preprocess_for_ocr(image_path):
     resized = cv2.resize(gray, (800, 800))  # keep it standard size
     return resized
 
-ocr = easyocr.Reader(['en'])
 
 def extract_text(image_input):
+    
+    ocr = easyocr.Reader(['en'])
     result = ocr.readtext(image_input)
     text = " ".join([res[1] for res in result])
     return text.strip()
