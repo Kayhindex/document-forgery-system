@@ -10,8 +10,5 @@ exifread
 tensorflow
 gdown
 streamlit-option-menu
-paddleocr
-paddlepaddle
-shapely
-PyMuPDF
-albumentations
+easyocr==1.7.1
+
