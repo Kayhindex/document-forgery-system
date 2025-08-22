@@ -13,3 +13,5 @@ streamlit-option-menu
 paddleocr
 paddlepaddle
 albumentations
+libgl1
+libglib2.0-0
