@@ -12,4 +12,4 @@ gdown
 streamlit-option-menu
 paddleocr
 paddlepaddle
-
+albumentations
