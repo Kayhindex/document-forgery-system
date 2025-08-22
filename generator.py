@@ -66,12 +66,11 @@ def preprocess_for_ocr(image_path):
 def extract_text(image_path):
     """Extract text using PaddleOCR."""
     result = ocr.ocr(image_path, cls=True)
-    text_results = []
-    for line in result[0]:
-        text_results.append(line[1][0])  # (text, confidence)
-    return " ".join(text_results)
-
-# Mark Fake Documents
+    text = ""
+    for line in result:
+        for word_info in line:
+            text += word_info[1][0] + " "
+    return text.strip()
 # -------------------------------
 def mark_fake_document(image_path, is_fake):
     img = Image.open(image_path).convert("RGB")
