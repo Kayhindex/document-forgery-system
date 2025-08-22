@@ -54,41 +54,23 @@ def preprocess_image(image):
     return reshaped, img
 
 # -------------------------------
-# OCR Function
-# ------------------------------
-# -------------------------------
-@st.cache_resource
-def load_paddleocr_reader():
-    """
-    Loads PaddleOCR reader instance (cached for performance).
-    """
-    # Use English only for speed, angle classification for rotated text
-    ocr = PaddleOCR(use_angle_cls=True, lang='en')
-    return ocr
+ocr = PaddleOCR(use_angle_cls=True, lang="en")
 
-# -------------------------------
-# Preprocessing function
-# -------------------------------
-def preprocess_for_ocr(image):
-    """
-    Preprocess image for better OCR accuracy and speed.
-    """
-    max_dim = 1024
-    h, w = image.shape[:2]
-    if max(h, w) > max_dim:
-        scale = max_dim / max(h, w)
-        image = cv2.resize(image, (int(w * scale), int(h * scale)))
-
-    # Convert to grayscale
+def preprocess_for_ocr(image_path):
+    """Preprocess image for OCR (resize + grayscale)."""
+    image = cv2.imread(image_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    resized = cv2.resize(gray, (800, 800))  # keep it standard size
+    return resized
 
-    # Apply thresholding (binarization)
-    _, thresh = cv2.threshold(
-        gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-    )
+def extract_text(image_path):
+    """Extract text using PaddleOCR."""
+    result = ocr.ocr(image_path, cls=True)
+    text_results = []
+    for line in result[0]:
+        text_results.append(line[1][0])  # (text, confidence)
+    return " ".join(text_results)
 
-    return thresh
-# -------------------------------
 # Mark Fake Documents
 # -------------------------------
 def mark_fake_document(image_path, is_fake):
