@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import cv2
-import easyocr
+from paddleocr import PaddleOCR
 import gdown
 from tensorflow.keras.models import load_model
 from PIL import Image, ImageDraw, ImageFont
@@ -55,62 +55,39 @@ def preprocess_image(image):
 
 # -------------------------------
 # OCR Function
+# ------------------------------
 # -------------------------------
 @st.cache_resource
-def load_easyocr_reader():
+def load_paddleocr_reader():
     """
-    Loads EasyOCR models (downloaded from Google Drive if not present)
-    and returns a cached EasyOCR reader instance.
+    Loads PaddleOCR reader instance (cached for performance).
     """
-    # Create directories
-    model_dir = "models/easyocr"
-    os.makedirs(f"{model_dir}/detection", exist_ok=True)
-    os.makedirs(f"{model_dir}/recognition", exist_ok=True)
+    # Use English only for speed, angle classification for rotated text
+    ocr = PaddleOCR(use_angle_cls=True, lang='en')
+    return ocr
 
-    # Google Drive file IDs (make sure they are PUBLIC)
-    DETECTION_MODEL_ID = "1BrPH3TOdDhUTUkOkYeGeWBBAEHMBWo6c"
-    RECOGNITION_MODEL_ID = "14KoCV69J2V___XSug8KxMkBHRA10avSa"
-
-    # Local paths
-    detection_path = f"{model_dir}/detection/craft_mlt_25k.pth"
-    recognition_path = f"{model_dir}/recognition/english_g2.pth"
-
-    # Download detection model if not exists
-    if not os.path.exists(detection_path):
-        url = f"https://drive.google.com/uc?id={DETECTION_MODEL_ID}"
-        gdown.download(url, detection_path, quiet=False, fuzzy=True)
-
-    # Download recognition model if not exists
-    if not os.path.exists(recognition_path):
-        url = f"https://drive.google.com/uc?id={RECOGNITION_MODEL_ID}"
-        gdown.download(url, recognition_path, quiet=False, fuzzy=True)
-
-    # Initialize EasyOCR reader using local models
-    return easyocr.Reader(
-        ['en'],
-        model_storage_directory=model_dir,
-        user_network_directory=model_dir
-    )
-
-def extract_text(image):
+# -------------------------------
+# Preprocessing function
+# -------------------------------
+def preprocess_for_ocr(image):
     """
-    Extracts text from an image using EasyOCR with preprocessing.
+    Preprocess image for better OCR accuracy and speed.
     """
+    max_dim = 1024
+    h, w = image.shape[:2]
+    if max(h, w) > max_dim:
+        scale = max_dim / max(h, w)
+        image = cv2.resize(image, (int(w * scale), int(h * scale)))
+
     # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Apply thresholding for better OCR
-    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    # Apply thresholding (binarization)
+    _, thresh = cv2.threshold(
+        gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
+    )
 
-    # Load EasyOCR reader (cached)
-    reader = load_easyocr_reader()
-
-    # Perform OCR
-    result = reader.readtext(thresh)
-
-    # Extract text only
-    text = " ".join([res[1] for res in result])
-    return text
+    return thresh
 # -------------------------------
 # Mark Fake Documents
 # -------------------------------
