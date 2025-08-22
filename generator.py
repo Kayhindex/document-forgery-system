@@ -63,14 +63,21 @@ def preprocess_for_ocr(image_path):
     resized = cv2.resize(gray, (800, 800))  # keep it standard size
     return resized
 
-def extract_text(image_path):
-    """Extract text using PaddleOCR."""
-    result = ocr.ocr(image_path, cls=True)
+def extract_text(image_input):
+    """Extract text using PaddleOCR. Supports both file paths and cv2/numpy images."""
+    if isinstance(image_input, str):
+        # image_input is a file path
+        result = ocr.ocr(image_input, cls=True)
+    else:
+        # assume it's an image array (cv2 / numpy)
+        result = ocr.ocr(image_input, cls=True)
+
     text = ""
     for line in result:
         for word_info in line:
             text += word_info[1][0] + " "
     return text.strip()
+
 # -------------------------------
 def mark_fake_document(image_path, is_fake):
     img = Image.open(image_path).convert("RGB")
