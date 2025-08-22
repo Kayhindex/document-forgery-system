@@ -12,4 +12,6 @@ gdown
 streamlit-option-menu
 paddleocr
 paddlepaddle
+shapely
+PyMuPDF
 albumentations
