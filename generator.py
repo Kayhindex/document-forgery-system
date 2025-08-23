@@ -43,7 +43,7 @@ model2 = load_school_model()
 # Hugging Face document classifier (lightweight text/image model)
 @st.cache_resource
 def load_document_classifier():
-    return pipeline("image-classification", model="microsoft/dit-base-finetuned-documents")
+    return pipeline("image-classification", model="microsoft/dit-base")
 
 doc_classifier = load_document_classifier()
 
