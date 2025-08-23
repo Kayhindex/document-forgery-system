@@ -365,7 +365,7 @@ elif selected == 'Detect Forgery':
 
     image_input = uploaded_file or camera_image
 
-   if image_input is not None and st.button('🔍 Check Document'):
+    if image_input is not None and st.button('🔍 Check Document'):
         st.info('Validating document...')
     
         # Convert and process image
