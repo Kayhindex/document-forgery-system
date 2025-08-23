@@ -1,14 +1,32 @@
+# Streamlit
 streamlit
+streamlit-option-menu
+
+# Hugging Face
+transformers
+datasets
+huggingface_hub
+
+# Deep learning
+torch
+torchvision
+torchaudio
+tensorflow
+
+# OCR
+easyocr==1.7.1
+paddleocr
+paddlepaddle
+pytesseract
+
+# Image processing
 opencv-python-headless==4.10.0.84
+scikit-image
+Pillow
+matplotlib
+exifread
+
+# Utilities
 numpy==1.23.5
 scipy
-scikit-image
-pillow
-matplotlib
-pytesseract
-exifread
-tensorflow
 gdown
-streamlit-option-menu
-easyocr==1.7.1
-
