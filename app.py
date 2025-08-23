@@ -366,41 +366,41 @@ elif selected == 'Detect Forgery':
     image_input = uploaded_file or camera_image
 
    if image_input is not None and st.button('🔍 Check Document'):
-    st.info('Validating document...')
-
-    # Convert and process image
-    file_bytes = np.asarray(bytearray(image_input.read()), dtype=np.uint8)
-    original_cv2 = cv2.imdecode(file_bytes, 1)
-
-    # 🔒 Validation step
-    if not is_document(original_cv2):
-        st.error("❌ This image does not look like a valid document. Please upload an ID or certificate.")
-    else:
-        st.info('Image processing in progress...')
-        progress_bar = st.progress(0)
-        for percent in range(100):
-            time.sleep(0.01)
-            progress_bar.progress(percent + 1)
-
-        # Continue with your existing forgery detection...
-        gray_cv2 = cv2.cvtColor(original_cv2, cv2.COLOR_BGR2GRAY)
-        gray_display = cv2.cvtColor(gray_cv2, cv2.COLOR_GRAY2RGB)
-        img = Image.fromarray(gray_display)
-        img.save('output.jpg')
-
-        input_img, original_cv2 = preprocess_image(img)
-
-        # Select model
-        if doc_type == 'National ID':
-            prediction = model.predict(input_img)[0][0]
+        st.info('Validating document...')
+    
+        # Convert and process image
+        file_bytes = np.asarray(bytearray(image_input.read()), dtype=np.uint8)
+        original_cv2 = cv2.imdecode(file_bytes, 1)
+    
+        # 🔒 Validation step
+        if not is_document(original_cv2):
+            st.error("❌ This image does not look like a valid document. Please upload an ID or certificate.")
         else:
-            prediction = model2.predict(input_img)[0][0]
-
-        is_fake = prediction < 0.5
-        label = "🔴 Fake" if is_fake else "🟢 Original"
-        confidence = (1 - prediction) if is_fake else prediction
-
-        # (keep your result display code here…)
+            st.info('Image processing in progress...')
+            progress_bar = st.progress(0)
+            for percent in range(100):
+                time.sleep(0.01)
+                progress_bar.progress(percent + 1)
+    
+            # Continue with your existing forgery detection...
+            gray_cv2 = cv2.cvtColor(original_cv2, cv2.COLOR_BGR2GRAY)
+            gray_display = cv2.cvtColor(gray_cv2, cv2.COLOR_GRAY2RGB)
+            img = Image.fromarray(gray_display)
+            img.save('output.jpg')
+    
+            input_img, original_cv2 = preprocess_image(img)
+    
+            # Select model
+            if doc_type == 'National ID':
+                prediction = model.predict(input_img)[0][0]
+            else:
+                prediction = model2.predict(input_img)[0][0]
+    
+            is_fake = prediction < 0.5
+            label = "🔴 Fake" if is_fake else "🟢 Original"
+            confidence = (1 - prediction) if is_fake else prediction
+    
+        
 
 
         # Display results
