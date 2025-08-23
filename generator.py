@@ -92,3 +92,33 @@ def mark_fake_document(image_path, is_fake):
         draw.line((0, height // 2, width, height // 2), fill="red", width=5)
 
     return img
+
+def is_document(image):
+    """
+    Validate if uploaded image looks like a document.
+    Uses shape + OCR text density check.
+    """
+    # Convert to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # --- Step 1: Edge + contour check (documents are rectangles)
+    edges = cv2.Canny(gray, 50, 150)
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    for cnt in contours:
+        approx = cv2.approxPolyDP(cnt, 0.02 * cv2.arcLength(cnt, True), True)
+        if len(approx) == 4:  # possible rectangle
+            x, y, w, h = cv2.boundingRect(approx)
+            aspect_ratio = w / float(h)
+
+            # filter out small shapes or extreme ratios
+            if 0.5 < aspect_ratio < 2.0 and w > 200 and h > 200:
+                return True
+
+    # --- Step 2: OCR check (documents usually have multiple words)
+    ocr = easyocr.Reader(['en'])
+    result = ocr.readtext(gray)
+    if len(result) >= 5:  # at least 5 words detected
+        return True
+
+    return False
