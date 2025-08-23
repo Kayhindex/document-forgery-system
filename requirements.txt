@@ -20,7 +20,7 @@ paddlepaddle
 pytesseract
 
 # Image processing
-opencv-python-headless==4.10.0.84
+opencv-python==4.8.1.78
 scikit-image
 Pillow
 matplotlib
