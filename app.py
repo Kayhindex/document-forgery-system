@@ -91,18 +91,119 @@ def header():
     )
 
 # ---------------- Home ----------------
-if selected == "Home":
+if selected == 'Home':
     header()
-    st.markdown(
-        """
-        <div style='background-color: rgba(0, 31, 63, 0.9); border-radius: 20px; padding: 30px; 
-        color: #E0F7FA; box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); margin-top: 20px;'>
-            <h2 style="color:#00CFFF; text-align:center;">👋 Welcome to DocumentGuard</h2>
-            <p style="text-align:center;">AI-Powered System for Real-Time Document Forgery Detection</p>
+
+    st.markdown("""
+        <style>
+        .home-container {
+            background-color: rgba(0, 31, 63, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            color: #E0F7FA;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            margin-top: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .home-title {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00CFFF;
+            margin-bottom: 20px;
+        }
+
+        .home-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #B2EBF2;
+            margin-bottom: 30px;
+        }
+
+        .feature-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .feature-card {
+            flex: 1 1 200px;
+            max-width: 250px;
+            background-color: #012742;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            color: #66FCF1;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 1.05em;
+            color: #ffffff;
+        }
+
+        /* 🔧 Responsive Fixes */
+        @media (max-width: 768px) {
+            .home-title {
+                font-size: 1.8em;
+            }
+
+            .home-subtitle {
+                font-size: 1em;
+            }
+
+            .feature-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-card {
+                width: 90%;
+                max-width: none;
+            }
+        }
+        </style>
+
+        <div class="home-container">
+            <div class="home-title">👋 Welcome to DocumentGuard</div>
+            <div class="home-subtitle">
+                AI-Powered System for Real-Time Document Forgery Detection
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <div class="feature-text"><b>Upload Documents</b><br>Supported formats like School ID & National ID</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-text"><b>Detect Forgery</b><br>Deep Learning model checks for tampering</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text"><b>Fast Results</b><br>Instant verdict: Original ✅ or Fake ❌</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-text"><b>OCR Support</b><br>Extract text from documents using AI</div>
+                </div>
+            </div>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    """, unsafe_allow_html=True)
+
 
 # ---------------- Detect Forgery ----------------
 elif selected == "Detect Forgery":
