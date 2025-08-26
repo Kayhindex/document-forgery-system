@@ -19,6 +19,7 @@ from generator import (
     
 )
 
+
 # ---------------- Streamlit Config ----------------
 st.set_page_config(
     page_title="Document Forgery Detection",
@@ -27,6 +28,92 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+st.markdown("""
+<style>
+.stApp {
+    background-color: #010a14;
+}
+[data-testid="stSidebar"] {
+    background-color: #0b1e2d;
+}
+[data-testid="stSidebar"] * {
+    color: #00ccff;
+}
+@media only screen and (max-width: 768px) {
+    .custom-header {
+        font-size: 26px !important;
+        padding: 6px !important;
+        margin-bottom: 15px;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        display: block !important;
+    }
+    .welcome-box, .card {
+        padding: 15px !important;
+        font-size: 16px !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        display: block !important;
+    }
+    .stButton button, .stRadio > div {
+        font-size: 15px !important;
+    }
+    .element-container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    .block-container {
+        padding: 1rem !important;
+    }
+    .stImage img {
+        width: 100% !important;
+        height: auto !important;
+    }
+    .nav-link {
+        font-size: 14px !important;
+        padding: 5px 8px !important;
+    }
+    .stTextArea textarea {
+        font-size: 14px !important;
+    }
+    .css-1d391kg {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+    }
+    .block-container {
+        padding-top: 100px !important;
+    }
+    .welcome-box h1, .welcome-box h2, .welcome-box p {
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        display: block !important;
+    }
+}
+
+@media only screen and (min-width: 769px) {
+    .css-1d391kg {
+        position: sticky !important;
+        top: 0;
+        z-index: 9999;
+    }
+    .block-container {
+        padding-top: 60px !important;
+    }
+    .welcome-box h1, .welcome-box h2, .welcome-box p {
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+        display: block !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
 # ---------------- Background / Styling ----------------
 def set_background(image_path: str):
     with open(image_path, "rb") as image_file:
