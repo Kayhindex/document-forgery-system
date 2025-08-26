@@ -424,22 +424,138 @@ elif selected == 'Detect Forgery':
 
         os.remove("output.jpg")
 
-# ---------------- About ----------------
-elif selected == "About":
-    st.markdown(
-        """
-        <div style='background:#f7f9fa;padding:40px;border-radius:16px;'>
-            <h2 style="text-align:center;color:#003366;">DocumentGuard</h2>
-            <p style="text-align:center;">AI-Powered Document Validation Tool</p>
+elif selected == 'About':
+    st.markdown("""
+    <style>
+        .about-container {
+            background-color: #f7f9fa;
+            padding: 40px;
+            border-radius: 16px;
+            font-family: 'Segoe UI', sans-serif;
+            color: #333333;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .about-header {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #003366;
+            margin-bottom: 10px;
+        }
+
+        .about-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h3 {
+            color: #005580;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        .section p, .section ul {
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        .section ul {
+            padding-left: 20px;
+        }
+
+        .section ul li {
+            margin-bottom: 10px;
+        }
+
+        .developer-card {
+            background-color: #e6f2ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .developer-card h4 {
+            margin-bottom: 5px;
+            color: #004d80;
+        }
+
+        .contact-info a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.95em;
+            color: #999999;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .about-container {
+                padding: 20px;
+            }
+
+            .about-header {
+                font-size: 2em;
+            }
+        }
+    </style>
+    <div class="about-container">
+        <div class="about-header">DocumentGuard: Forgery Detection System</div>
+        <div class="about-subtitle">AI-Powered Document Validation Tool</div>
+        <div class="section">
+            <h3>Overview</h3>
+            <p>DocumentGuard helps individuals and institutions verify the authenticity of identity documents like <strong>School IDs</strong> and <strong>National IDs</strong> using AI-based image processing and computer vision models.</p>
+        </div>
+        <div class="section">
+            <h3>Core Features</h3>
             <ul>
-                <li>📷 Upload or capture document image</li>
-                <li>🤖 CNN detects forgery or tampering</li>
-                <li>🧠 OCR extracts text</li>
-                <li>📊 Confidence scores displayed</li>
-                <li>📂 View history of scans</li>
+                <li>📷 Upload or use camera to submit document image</li>
+                <li>🤖 Detect forged or altered regions using CNN models</li>
+                <li>🧠 Use OCR to extract embedded text</li>
+                <li>📊 View prediction scores and confidence levels</li>
+                <li>📂 Review previous scans in the history panel</li>
+                <li>🖼️ Visual result overlays for transparency</li>
             </ul>
+        </div>
+        <div class="section">
+            <h3>How It Works</h3>
+            <ul>
+                <li>Image is resized and preprocessed (grayscale, normalization)</li>
+                <li>Convolutional Neural Network (CNN) checks for tampering or forgery</li>
+                <li>Results are displayed with textual extraction and image annotation</li>
+                <li>History is logged for traceability and easy reference</li>
+            </ul>
+        </div>
+        <div class="section developer-card">
             <h3>Developer</h3>
-            <p><b>Olarinde Olateju Rachael</b><br>Data Scientist | Python Programmer</p>
+            <h4>Olarinde Olateju Rachael</h4>
+            <p>Data Scientist | Python Programmer | Streamlit Developer</p>
+            <p>📍 Ogbomoso, Oyo State, Nigeria</p>
+        </div>
+        <div class="section contact-info">
+            <h3>Contact</h3>
+            <ul>
+                <li>📧 Email: <a href="mailto:olarindeolatejur@gmail.com">olarindeolatejur@gmail.com</a></li>
+                <li>💻 GitHub: <a href="https://github.com/Olateju" target="_blank">github.com/Olateju</a></li>
+                <li>🔗 LinkedIn: <a href="https://linkedin.com/in/Olateju" target="_blank">linkedin.com/in/Olateju</a></li>
+            </ul>
+        </div>
+        <div class="footer-note">
+            © 2025 DocumentGuard | Built using Streamlit and Python
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
             <p>📍 Ogbomoso, Oyo State, Nigeria</p>
         </div>
         """,
