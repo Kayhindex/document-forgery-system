@@ -205,93 +205,137 @@ if selected == 'Home':
     """, unsafe_allow_html=True)
 
 
-# ---------------- Detect Forgery ----------------
-elif selected == "Detect Forgery":
-    if "history" not in st.session_state:
+# Detect Forgery
+elif selected == 'Detect Forgery':
+    if 'history' not in st.session_state:
         st.session_state.history = []
-    if "show_history" not in st.session_state:
+    if 'show_history' not in st.session_state:
         st.session_state.show_history = False
 
-    # Sidebar
+    # Sidebar: Document type, branding image, and tools
     with st.sidebar:
-        doc_type = st.selectbox("Select Document Type", options=["National ID", "School ID"])
-        st.image("image/new2.jpg", use_container_width=True)
+        doc_type = st.selectbox("Select Document Type", options=['National ID', 'School ID'], key='doc_type')
+        st.image('image/new2.jpg', use_container_width=True)
         st.divider()
-        if st.button("📜 History"):
-            st.session_state.show_history = not st.session_state.show_history
-        if st.button("🧹 Clear"):
-            st.session_state.history = []
-            st.session_state.show_history = False
-            st.rerun()
+        st.markdown("## 🛠️ Prediction Tools")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("📜 History"):
+                st.session_state.show_history = not st.session_state.show_history
+        with col2:
+            if st.button("🧹 Clear"):
+                st.session_state.history = []
+                st.session_state.show_history = False
+                st.rerun()
 
-        if st.session_state.show_history and st.session_state.history:
+        if st.session_state.show_history:
+            st.markdown("---")
             st.markdown("### 🕘 Last 3 Predictions")
-            for record in reversed(st.session_state.history[-3:]):
-                st.markdown(f"**{record['timestamp']}**")
-                img_bytes = base64.b64decode(record["image"])
-                st.image(Image.open(io.BytesIO(img_bytes)), caption=record["result"], use_container_width=True)
-                st.markdown("---")
+            if st.session_state.history:
+                for record in reversed(st.session_state.history[-3:]):
+                    st.markdown(f"**{record['timestamp']}**")
+                    img_bytes = base64.b64decode(record["image"])
+                    image = Image.open(io.BytesIO(img_bytes))
+                    st.image(image, caption=record["result"], use_container_width=True)
+                    st.markdown("---")
+            else:
+                st.info("No predictions yet.")
 
-    # Upload/Camera input
-    input_method = st.radio("Choose Input Method", ["Upload Image", "Use Camera"], horizontal=True)
-    uploaded_file = st.file_uploader("Upload Document", type=["jpg", "jpeg", "png"]) if input_method == "Upload Image" else None
-    camera_image = st.camera_input("Take a picture") if input_method == "Use Camera" else None
+    # Style block
+    st.markdown("""
+        <style>
+            .header-title {
+                text-align: center;
+                font-size: 2.7em;
+                font-weight: 800;
+                margin-top: 20px;
+                color: #002b45;
+                background-color: white;
+            }
+            # .upload-box {
+            #     background-color: #f0f4f8;
+            #     padding: 30px;
+            #     border-radius: 14px;
+            #     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            #     margin-top: 20px;
+            }
+            .stButton>button {
+                background-color: #0066cc;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-weight: bold;
+                transition: background-color 0.3s;
+            }
+            .stButton>button:hover {
+                background-color: #004d99;
+    
+            }
+        </style>
+        <div class='header-title'>📄 Upload or Capture Document</div>
+    """, unsafe_allow_html=True)
+
+    # Input method
+    with st.container():
+        st.markdown("<div class='upload-box'>", unsafe_allow_html=True)
+        input_method = st.radio("Choose Input Method", ["Upload Image", "Use Camera"], horizontal=True)
+        uploaded_file = st.file_uploader("Upload Document Image", type=["jpg", "jpeg", "png"]) if input_method == "Upload Image" else None
+        camera_image = st.camera_input("Take a picture") if input_method == "Use Camera" else None
+        st.markdown("</div>", unsafe_allow_html=True)
+
     image_input = uploaded_file or camera_image
 
-    if image_input is not None and st.button("🔍 Check Document"):
-        st.info("Validating document...")
+    if image_input is not None and st.button('🔍 Check Document'):
+        st.info('Image processing in progress...')
+        progress_bar = st.progress(0)
+        for percent in range(100):
+            time.sleep(0.01)
+            progress_bar.progress(percent + 1)
 
-        # Convert to CV2 image
+        # Convert and process image
         file_bytes = np.asarray(bytearray(image_input.read()), dtype=np.uint8)
         original_cv2 = cv2.imdecode(file_bytes, 1)
+        gray_cv2 = cv2.cvtColor(original_cv2, cv2.COLOR_BGR2GRAY)
+        gray_display = cv2.cvtColor(gray_cv2, cv2.COLOR_GRAY2RGB)
 
-        # 🔒 Validation gate
-        if not is_document(original_cv2):
-            st.error("❌ This image does not look like a valid document. Please upload a valid ID or certificate.")
+        img = Image.fromarray(gray_display)
+        img.save('output.jpg')
+
+        input_img, original_cv2 = preprocess_image(img)
+
+        # Use different model based on document type
+        if doc_type == 'National ID':
+            prediction = model.predict(input_img)[0][0]
         else:
-            st.info("Image processing in progress...")
-            progress_bar = st.progress(0)
-            for percent in range(100):
-                time.sleep(0.01)
-                progress_bar.progress(percent + 1)
+            prediction = model2.predict(input_img)[0][0]  
+        is_fake = prediction < 0.5
+        label = "🔴 Fake" if is_fake else "🟢 Original"
+        confidence = (1 - prediction) if is_fake else prediction
 
-            # Preprocess for model
-            gray_cv2 = cv2.cvtColor(original_cv2, cv2.COLOR_BGR2GRAY)
-            gray_display = cv2.cvtColor(gray_cv2, cv2.COLOR_GRAY2RGB)
-            img = Image.fromarray(gray_display)
-            img.save("output.jpg")
+        # Display results
+        st.image(image_input, caption="📤 Uploaded Document", use_container_width=True)
+        st.success(f"**Result:** {label}")
+        st.markdown(f"**Confidence Score:** `{confidence:.2f}`")
+        prediction_time = datetime.now().strftime("%Y-%m-%d / %H:%M:%S")
 
-            input_img, _ = preprocess_image(img)
+        ocr_img = mark_fake_document("output.jpg", is_fake)
+        st.image(ocr_img, caption="🧠 OCR & Forgery Marked Result", use_container_width=True)
 
-            # Select model
-            prediction = model.predict(input_img)[0][0] if doc_type == "National ID" else model2.predict(input_img)[0][0]
-            is_fake = prediction < 0.5
-            label = "🔴 Fake" if is_fake else "🟢 Original"
-            confidence = (1 - prediction) if is_fake else prediction
+        st.subheader("⏰ Prediction Time")
+        st.info(f"🕒 {prediction_time}")
 
-            # Results
-            st.image(image_input, caption="📤 Uploaded Document", use_container_width=True)
-            st.success(f"**Result:** {label}")
-            st.markdown(f"**Confidence Score:** `{confidence:.2f}`")
-            prediction_time = datetime.now().strftime("%Y-%m-%d / %H:%M:%S")
+        st.subheader("📄 Extracted Text (OCR)")
+        text = extract_text(original_cv2)
+        st.text_area("Detected Text", text, height=200)
+        st.download_button("⬇ Download Extracted Text", text, file_name="ocr_output.txt")
 
-            # Marked output
-            ocr_img = mark_fake_document("output.jpg", is_fake)
-            st.image(ocr_img, caption="🧠 OCR & Forgery Marked Result", use_container_width=True)
+        img_buffer = io.BytesIO()
+        ocr_img.save(img_buffer, format='JPEG')
+        img_base64 = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
+        st.session_state.history.append({"timestamp": prediction_time, "image": img_base64, "result": label})
 
-            # OCR text extraction
-            st.subheader("📄 Extracted Text")
-            text = extract_text(original_cv2)
-            st.text_area("Detected Text", text, height=200)
-            st.download_button("⬇ Download Extracted Text", text, file_name="ocr_output.txt")
-
-            # Save history
-            img_buffer = io.BytesIO()
-            ocr_img.save(img_buffer, format="JPEG")
-            img_base64 = base64.b64encode(img_buffer.getvalue()).decode("utf-8")
-            st.session_state.history.append({"timestamp": prediction_time, "image": img_base64, "result": label})
-
-            os.remove("output.jpg")
+        os.remove("output.jpg")
 
 # ---------------- About ----------------
 elif selected == "About":
