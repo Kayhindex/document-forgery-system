@@ -2,22 +2,22 @@
 streamlit
 streamlit-option-menu
 
-# Hugging Face
+# Hugging Face (if used for models)
 transformers
 datasets
 huggingface_hub
 
-# Deep learning
+# Deep learning (choose one if possible to reduce build size)
 torch
 torchvision
 torchaudio
-tensorflow
+# tensorflow   uncomment only if your models need TF
 
 # OCR
 easyocr==1.7.1
-paddleocr
-paddlepaddle
 pytesseract
+# paddleocr    # optional, but may cause heavy build
+# paddlepaddle # optional, but may fail on Streamlit Cloud
 
 # Image processing
 opencv-python-headless
@@ -27,6 +27,6 @@ matplotlib
 exifread
 
 # Utilities
-numpy==1.23.5
+numpy
 scipy
 gdown
