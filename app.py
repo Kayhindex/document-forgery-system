@@ -16,7 +16,7 @@ from generator import (
     model,
     model2,
     mark_fake_document,
-    is_document
+    
 )
 
 # ---------------- Streamlit Config ----------------
