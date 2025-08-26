@@ -103,41 +103,41 @@ def mark_fake_document(image_path, is_fake):
 # -------------------------------
 # Document validation
 # -------------------------------
-def is_document(image):
-    """
-    Validate if uploaded image is a document.
-    Uses contour geometry + OCR + Hugging Face classifier.
-    """
-    # Convert to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+# def is_document(image):
+#     """
+#     Validate if uploaded image is a document.
+#     Uses contour geometry + OCR + Hugging Face classifier.
+#     """
+#     # Convert to grayscale
+#     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Step 1: Contour check (documents are rectangles)
-    edges = cv2.Canny(gray, 50, 150)
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+#     # Step 1: Contour check (documents are rectangles)
+#     edges = cv2.Canny(gray, 50, 150)
+#     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    for cnt in contours:
-        approx = cv2.approxPolyDP(cnt, 0.02 * cv2.arcLength(cnt, True), True)
-        if len(approx) == 4:  # rectangle
-            x, y, w, h = cv2.boundingRect(approx)
-            aspect_ratio = w / float(h)
-            if 0.5 < aspect_ratio < 2.0 and w > 200 and h > 200:
-                break
-    else:
-        return False
+#     for cnt in contours:
+#         approx = cv2.approxPolyDP(cnt, 0.02 * cv2.arcLength(cnt, True), True)
+#         if len(approx) == 4:  # rectangle
+#             x, y, w, h = cv2.boundingRect(approx)
+#             aspect_ratio = w / float(h)
+#             if 0.5 < aspect_ratio < 2.0 and w > 200 and h > 200:
+#                 break
+#     else:
+#         return False
 
-    # Step 2: OCR density check
-    ocr = easyocr.Reader(['en'])
-    result = ocr.readtext(gray)
-    if len(result) < 3:  # must have some text
-        return False
+#     # Step 2: OCR density check
+#     ocr = easyocr.Reader(['en'])
+#     result = ocr.readtext(gray)
+#     if len(result) < 3:  # must have some text
+#         return False
 
-    # Step 3: Hugging Face check (classifier confidence)
-    pil_img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    predictions = doc_classifier(pil_img)
-    top_label = predictions[0]["label"].lower()
-    confidence = predictions[0]["score"]
+#     # Step 3: Hugging Face check (classifier confidence)
+#     pil_img = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+#     predictions = doc_classifier(pil_img)
+#     top_label = predictions[0]["label"].lower()
+#     confidence = predictions[0]["score"]
 
-    if "document" in top_label and confidence > 0.7:
-        return True
+#     if "document" in top_label and confidence > 0.7:
+#         return True
 
-    return False
+#     return False
