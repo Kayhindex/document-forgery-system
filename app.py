@@ -556,8 +556,3 @@ elif selected == 'About':
         </div>
     </div>
     """, unsafe_allow_html=True)
-            <p>📍 Ogbomoso, Oyo State, Nigeria</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
